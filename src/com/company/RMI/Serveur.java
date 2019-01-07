@@ -18,8 +18,8 @@ public class Serveur {
 	 */
 	public static void main(String[] args) throws RemoteException, MalformedURLException, AlreadyBoundException {
 		MaClasse mc = new MaClasse();
-        Registry registry = LocateRegistry.getRegistry("127.0.0.1", 11099);
-        registry.bind("rmi://localhost:1099/coucou", mc);
+        Registry registry = LocateRegistry.createRegistry(11099);
+        registry.bind("rmi://localhost:11099/coucou", mc);
 
 	}
 

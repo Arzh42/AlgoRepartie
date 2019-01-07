@@ -14,7 +14,7 @@ public class Client {
 	 */
 	public static void main(String[] args) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry("127.0.0.1", 11099);
-        MonInterface mi = (MonInterface) registry.lookup("rmi://localhost:1099/coucou");
+        MonInterface mi = (MonInterface) registry.lookup("rmi://localhost:11099/coucou");
         mi.methode();
 	}
 
