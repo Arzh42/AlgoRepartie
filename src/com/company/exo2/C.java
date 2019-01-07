@@ -17,18 +17,17 @@ public class C extends Thread {
         Object obj;
 
         try {
-            backSocket  = new Socket("127.0.0.1",11001);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             ServerSocket server_socket = new ServerSocket(11087);
             socket = server_socket.accept();
             while(true) {
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 try {
                     obj = in.readObject();
-                    if (obj instanceof Signal) {
+                    if (obj instanceof StartSignal) {
+                        backSocket  = new Socket("127.0.0.1",11001);
+                        sendStopSignal();
+                    }
+                    else if (obj instanceof Signal) {
                         signal((Signal)obj);
                     }
                     else if (obj instanceof StopSignal) {
@@ -44,17 +43,22 @@ public class C extends Thread {
         }
     }
     private void signal(Signal sig) {
+        System.out.println(compteur);
         compteur ++;
-        if (compteur>10) {
-            ObjectOutputStream out = null;
-            try {
-                out = new ObjectOutputStream(backSocket.getOutputStream());
-                StopSignal stop = new StopSignal();
-                out.writeObject(stop);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (compteur>1) {
+            sendStopSignal();
         }
         System.out.println(sig.getN());
+    }
+    private void sendStopSignal() {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(backSocket.getOutputStream());
+            StopSignal stop = new StopSignal();
+            out.writeObject(stop);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

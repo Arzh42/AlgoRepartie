@@ -32,6 +32,7 @@ public class B extends Thread {
         try {
             ServerSocket server_socket = new ServerSocket(i);
             socket = server_socket.accept();
+            sendStartSignal();
             while(b<1000) {
                 ObjectInputStream in = new ObjectInputStream((socket.getInputStream()));
                 try {
@@ -60,7 +61,16 @@ public class B extends Thread {
             e.printStackTrace();
         }
     }
-
+    private void sendStartSignal() {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(socketVC.getOutputStream());
+            StartSignal start = new StartSignal();
+            out.writeObject(start);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void signal(Signal obj) {
         Somme += obj.getN();
         if (Somme>1000) {
